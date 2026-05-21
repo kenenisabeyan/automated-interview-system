@@ -13,6 +13,7 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 const page = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrentUser();
+  if (!user) redirect("/sign-in");
 
   const interview = await getInterviewById(id);
 
@@ -20,7 +21,7 @@ const page = async ({ params }: RouteParams) => {
 
   const feedback = await getFeedbackByInterviewId({
     interviewId: id,
-    userID: user?.id!,
+    userID: user.id,
   });
 
   return (

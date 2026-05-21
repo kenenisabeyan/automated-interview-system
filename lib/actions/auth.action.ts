@@ -24,9 +24,10 @@ export async function signUp(params: SignUpParams) {
       success: true,
       message: "Sign up successful! Please sign in.",
     };
-  } catch (e: any) {
+  } catch (e) {
     console.error("Error signing up:", e);
-    if (e.code === "auth/email-already-exists") {
+    const error = e as { code?: string };
+    if (error.code === "auth/email-already-exists") {
       return {
         success: false,
         message: "Email already exists. Please use a different email address.",
@@ -73,7 +74,7 @@ export async function signIn(params: SignInParams) {
       success: true,
       message: "Sign in successful!",
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error signing in:", error);
 
     return {

@@ -10,7 +10,6 @@ import Link from "next/link";
 import { toast } from "sonner";
 import FormField from "./FormField";
 import { useRouter } from "next/navigation";
-import { create } from "domain";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signIn, signUp } from "@/lib/actions/auth.action";
@@ -79,9 +78,20 @@ const AuthForm = ({ type }: { type: FormType }) => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error(
-        "An error occurred while submitting the form. Please try again."
-      );
+      
+      let errorMessage = "An error occurred while submitting the form. Please try again.";
+      const firebaseError = error as { code?: string; message?: string };
+      
+      if (firebaseError?.code === "auth/email-already-in-use") {
+        errorMessage = "This email is already in use. Please sign in instead.";
+      } else if (firebaseError?.code === "auth/invalid-credential" || firebaseError?.code === "auth/user-not-found" || firebaseError?.code === "auth/wrong-password") {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (firebaseError?.message) {
+        // Fallback to the error message returned from Firebase if available
+        errorMessage = firebaseError.message.replace("Firebase: ", "");
+      }
+      
+      toast.error(errorMessage);
     }
   }
 

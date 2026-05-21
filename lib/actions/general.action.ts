@@ -8,42 +8,52 @@ import { generateObject } from "ai";
 export async function getInterviewByUserId(
   userId: string
 ): Promise<Interview[] | null> {
-  const interviews = await db
-    .collection("interviews")
-    .where("userID", "==", userId)
-    .orderBy("createdAt", "desc")
-    .get();
+  try {
+    const interviews = await db
+      .collection("interviews")
+      .where("userID", "==", userId)
+      .orderBy("createdAt", "desc")
+      .get();
 
-  if (interviews.empty) return null;
+    if (interviews.empty) return null;
 
-  const result: Interview[] = interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+    const result: Interview[] = interviews.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Interview[];
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error("Error fetching user interviews:", error);
+    return null;
+  }
 }
 
 export async function getLatestInterviews(
   params: GetLatestInterviewsParams
 ): Promise<Interview[] | null> {
-  const { userId, limit = 20 } = params;
-  const interviews = await db
-    .collection("interviews")
-    .orderBy("createdAt", "desc")
-    .where("finalized", "==", true)
-    .where("userID", "!=", userId)
-    .limit(limit)
-    .get();
+  try {
+    const { userId, limit = 20 } = params;
+    const interviews = await db
+      .collection("interviews")
+      .orderBy("createdAt", "desc")
+      .where("finalized", "==", true)
+      .where("userID", "!=", userId)
+      .limit(limit)
+      .get();
 
-  if (interviews.empty) return null;
+    if (interviews.empty) return null;
 
-  const result: Interview[] = interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+    const result: Interview[] = interviews.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Interview[];
 
-  return result;
+    return result;
+  } catch (error) {
+    console.error("Error fetching latest interviews:", error);
+    return null;
+  }
 }
 
 export async function getInterviewById(id: string): Promise<Interview | null> {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -64,7 +64,7 @@ const Agent = ({
     };
   }, []);
 
-  const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+  const handleGenerateFeedback = useCallback(async (messages: SavedMessage[]) => {
     // Creating a server action that generates feedback
 
     const { success, feedbackId: id } = await createFeedback({
@@ -78,7 +78,7 @@ const Agent = ({
     } else {
       console.log("Error Sving Feedback");
     }
-  };
+  }, [interviewId, userId, router]);
 
   useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
@@ -88,7 +88,7 @@ const Agent = ({
         handleGenerateFeedback(messages);
       }
     }
-  }, [messages, callStatus, type, userId]);
+  }, [messages, callStatus, type, handleGenerateFeedback, router]);
 
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);

@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
-import { dummyInterviews } from "@/constants";
-import { Inter } from "next/font/google";
 import InterviewCard from "@/components/InterviewCard";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
@@ -15,12 +12,12 @@ const page = async () => {
   const user = await getCurrentUser();
 
   const [userInterviews, latestInterviews] = await Promise.all([
-    await getInterviewByUserId(user?.id!),
-    await getLatestInterviews({ userId: user?.id }),
+    user?.id ? getInterviewByUserId(user.id) : Promise.resolve(null),
+    getLatestInterviews({ userId: user?.id || "guest" }),
   ]);
-  const hasPastInterviews = userInterviews?.length > 0;
+  const hasPastInterviews = userInterviews && userInterviews.length > 0;
 
-  const hasUpcomingInterviews = latestInterviews?.length > 0;
+  const hasUpcomingInterviews = latestInterviews && latestInterviews.length > 0;
   return (
     <>
       <section className="card-cta">
