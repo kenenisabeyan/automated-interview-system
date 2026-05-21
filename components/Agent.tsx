@@ -65,8 +65,6 @@ const Agent = ({
   }, []);
 
   const handleGenerateFeedback = useCallback(async (messages: SavedMessage[]) => {
-    // Creating a server action that generates feedback
-
     const { success, feedbackId: id } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,

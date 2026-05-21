@@ -36,7 +36,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === "sign-up") {
@@ -87,7 +86,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
       } else if (firebaseError?.code === "auth/invalid-credential" || firebaseError?.code === "auth/user-not-found" || firebaseError?.code === "auth/wrong-password") {
         errorMessage = "Invalid email or password. Please try again.";
       } else if (firebaseError?.message) {
-        // Fallback to the error message returned from Firebase if available
         errorMessage = firebaseError.message.replace("Firebase: ", "");
       }
       
