@@ -24,6 +24,8 @@ const page = async ({ params }: RouteParams) => {
     userID: user.id,
   });
 
+  if (!feedback) redirect(`/interview/${id}`);
+
   return (
     <section className="section-feedback">
       <div className="flex flex-row justify-center">

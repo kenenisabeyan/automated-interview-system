@@ -59,9 +59,12 @@ export async function getLatestInterviews(
 export async function getInterviewById(id: string): Promise<Interview | null> {
   const interview = await db.collection("interviews").doc(id).get();
 
-  if (!interview) return null;
+  if (!interview.exists) return null;
 
-  return interview.data() as Interview | null;
+  return {
+    id: interview.id,
+    ...interview.data(),
+  } as Interview;
 }
 
 export async function createFeedback(params: CreateFeedbackParams) {
