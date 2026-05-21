@@ -10,6 +10,9 @@ import { getCurrentUser } from "@/lib/actions/auth.action";
 const page = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrentUser();
+
+  if (!user) redirect("/sign-in");
+
   const interview = await getInterviewById(id);
 
   if (!interview) redirect("/");
@@ -35,8 +38,8 @@ const page = async ({ params }: RouteParams) => {
         </p>
       </div>
       <Agent
-        userName={user?.name || ""}
-        userId={user?.id}
+        userName={user.name}
+        userId={user.id}
         interviewId={id}
         type="interview"
         questions={interview.questions}
