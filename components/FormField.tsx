@@ -22,7 +22,7 @@ const FormField = <T extends FieldValues>({
   label,
   placeholder,
   type = "text",
-}: FormFieldProps<T>) => (
+}: FormFieldProps<T>): React.JSX.Element => (
   <Controller
     name={name}
     control={control}

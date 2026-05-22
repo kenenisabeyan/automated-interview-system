@@ -21,7 +21,7 @@ interface SavedMessage {
 }
 
 const Agent = ({
-  userName,
+  userName = "Guest",
   userId,
   type,
   interviewId,
